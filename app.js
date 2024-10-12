@@ -1,6 +1,10 @@
 const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot');
 const WebWhatsappProvider = require('@bot-whatsapp/provider/web-whatsapp');
 const MockAdapter = require('@bot-whatsapp/database/mock');
+const path = require('path'); // Importar el módulo 'path'
+
+// Definir la ruta raíz de tu aplicación
+const rootDir = path.resolve(__dirname); // Esto apunta al directorio raíz del proyecto
 
 // Flujos para las diferentes opciones según la elección numérica
 const flowHorario = addKeyword('1', 'strict') // Responde solo si el usuario envía exactamente "1"
