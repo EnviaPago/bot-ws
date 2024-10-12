@@ -1,10 +1,13 @@
+const express = require('express');
 const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot');
 const WebWhatsappProvider = require('@bot-whatsapp/provider/web-whatsapp');
 const MockAdapter = require('@bot-whatsapp/database/mock');
-const path = require('path'); // Importar el módulo 'path'
 
-// Definir la ruta raíz de tu aplicación
-const rootDir = path.resolve(__dirname); // Esto apunta al directorio raíz del proyecto
+// Crear una instancia de Express
+const app = express();
+
+// Configura el middleware para servir archivos estáticos
+app.use(express.static(__dirname)); // Sirve archivos desde la raíz del proyecto
 
 // Flujos para las diferentes opciones según la elección numérica
 const flowHorario = addKeyword('1', 'strict') // Responde solo si el usuario envía exactamente "1"
@@ -81,5 +84,11 @@ const main = async () => {
         database: adapterDB,
     });
 }
+
+// Cambia esta parte para que escuche en el puerto de Railway
+const PORT = process.env.PORT || 3000; // Usa el puerto proporcionado por Railway
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
 main();
