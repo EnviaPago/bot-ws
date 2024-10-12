@@ -6,7 +6,7 @@ const MockAdapter = require('@bot-whatsapp/database/mock');
 // Crear una instancia de Express
 const app = express();
 
-// Configura el middleware para servir archivos estáticos
+// Configura el middleware para servir archivos estático
 app.use(express.static(__dirname)); // Sirve archivos desde la raíz del proyecto
 
 // Flujos para las diferentes opciones según la elección numérica
