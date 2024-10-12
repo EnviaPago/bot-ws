@@ -6,6 +6,9 @@ const MockAdapter = require('@bot-whatsapp/database/mock');
 // Crear una instancia de Express
 const app = express();
 
+// Configura el middleware para servir archivos estáticos
+app.use(express.static(__dirname)); // Sirve archivos desde la raíz del proyecto
+
 // Flujos para las diferentes opciones según la elección numérica
 const flowHorario = addKeyword('1', 'strict') // Responde solo si el usuario envía exactamente "1"
     .addAnswer('Nuestro horario es:\nLunes a Viernes de 8:00am a 5:00pm\nSábados de 8:00am a 1:00pm🇻🇪🏦');
