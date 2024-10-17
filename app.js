@@ -8,18 +8,23 @@ const MockAdapter = require('@bot-whatsapp/database/mock');
 // Ruta de la carpeta .wwebjs_auth
 const authFolderPath = path.join(__dirname, '.wwebjs_auth');
 
-// Función para eliminar la carpeta si existe
+// Función para eliminar la carpeta si existe, con manejo de errores detallado
 const deleteAuthFolderIfExists = () => {
-    if (fs.existsSync(authFolderPath)) {
-        // Elimina la carpeta y su contenido
-        fs.rmSync(authFolderPath, { recursive: true, force: true });
-        console.log('.wwebjs_auth folder found and deleted.');
-    } else {
-        console.log('.wwebjs_auth folder does not exist. Starting normally.');
+    try {
+        if (fs.existsSync(authFolderPath)) {
+            // Elimina la carpeta y su contenido
+            fs.rmSync(authFolderPath, { recursive: true, force: true });
+            console.log('.wwebjs_auth folder found and deleted.');
+        } else {
+            console.log('.wwebjs_auth folder does not exist. Starting normally.');
+        }
+    } catch (error) {
+        console.error(`Error deleting .wwebjs_auth folder: ${error.message}`);
+        process.exit(1); // Termina el proceso si no puede eliminar la carpeta
     }
 };
 
-// Ejecuta la función antes de iniciar el servidor
+// Ejecuta la función para eliminar la carpeta **antes** de iniciar el servidor o el bot
 deleteAuthFolderIfExists();
 
 // Crear una instancia de Express
