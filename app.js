@@ -1,7 +1,26 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot');
 const WebWhatsappProvider = require('@bot-whatsapp/provider/web-whatsapp');
 const MockAdapter = require('@bot-whatsapp/database/mock');
+
+// Ruta de la carpeta .wwebjs_auth
+const authFolderPath = path.join(__dirname, '.wwebjs_auth');
+
+// Función para eliminar la carpeta si existe
+const deleteAuthFolderIfExists = () => {
+    if (fs.existsSync(authFolderPath)) {
+        // Elimina la carpeta y su contenido
+        fs.rmSync(authFolderPath, { recursive: true, force: true });
+        console.log('.wwebjs_auth folder found and deleted.');
+    } else {
+        console.log('.wwebjs_auth folder does not exist. Starting normally.');
+    }
+};
+
+// Ejecuta la función antes de iniciar el servidor
+deleteAuthFolderIfExists();
 
 // Crear una instancia de Express
 const app = express();
@@ -10,37 +29,37 @@ const app = express();
 app.use(express.static(__dirname)); // Sirve archivos desde la raíz del proyecto
 
 // Flujos para las diferentes opciones según la elección numérica
-const flowHorario = addKeyword('1', 'strict') // Responde solo si el usuario envía exactamente "1"
+const flowHorario = addKeyword('1', 'strict')
     .addAnswer('Nuestro horario es:\nLunes a Viernes de 8:00am a 5:00pm\nSábados de 8:00am a 1:00pm🇻🇪🏦');
 
-const flowFuncionamiento = addKeyword('2', 'strict') // Responde solo si el usuario envía exactamente "2"
+const flowFuncionamiento = addKeyword('2', 'strict')
     .addAnswer('EnviaPago es una casa de cambio virtual que recibe remesas desde varios países del mundo y las entrega en Venezuela. Todo es 100% online. Solo debes ingresar en EnviaPago.com y rellenar los formularios de pago.');
 
-const flowTasaCambio = addKeyword('3', 'strict') // Responde solo si el usuario envía exactamente "3"
+const flowTasaCambio = addKeyword('3', 'strict')
     .addAnswer('La tasa de cambio de EnviaPago está siempre por encima del Banco Central de Venezuela y se actualiza diariamente en EnviaPago.com.');
 
-const flowTiempoRemesa = addKeyword('4', 'strict') // Responde solo si el usuario envía exactamente "4"
+const flowTiempoRemesa = addKeyword('4', 'strict')
     .addAnswer('Recibirás tu pago en bolívares en un plazo máximo de 12 horas hábiles después de recibir la transferencia en moneda extranjera.');
 
-const flowNoRecibido = addKeyword('5', 'strict') // Responde solo si el usuario envía exactamente "5"
+const flowNoRecibido = addKeyword('5', 'strict')
     .addAnswer('Un gusto en saludarte, estimado cliente. Te contactaremos pronto. Recomendaciones:\n1) Verifica que tu pago esté correctamente cargado.\n2) Asegúrate de ser el titular de la cuenta de origen.\n3) Revisa todos los datos de envío.');
 
-const flowProblemasPagina = addKeyword('6', 'strict') // Responde solo si el usuario envía exactamente "6"
+const flowProblemasPagina = addKeyword('6', 'strict')
     .addAnswer('Por favor, comenta qué problemas estás presentando para poder brindarte una ayuda personalizada.');
 
-const flowUrgente = addKeyword('7', 'strict') // Responde solo si el usuario envía exactamente "7"
+const flowUrgente = addKeyword('7', 'strict')
     .addAnswer('¿Indícame en qué puedo ayudarte?');
 
-const flowNoCargaComprobante = addKeyword('8', 'strict') // Responde solo si el usuario envía exactamente "8"
+const flowNoCargaComprobante = addKeyword('8', 'strict')
     .addAnswer('Para que su comprobante se cargue correctamente, es necesario contar con una solicitud de pago previa que contenga todos los datos y especificaciones correspondientes. Puede solicitar dicha solicitud a través del siguiente enlace: https://enviapago.com/form.');
 
-const flowMonedas = addKeyword('9', 'strict') // Responde solo si el usuario envía exactamente "9"
+const flowMonedas = addKeyword('9', 'strict')
     .addAnswer('Las monedas que manejamos en EnviaPago son las siguientes:\n- Euros 💶\n- Dólares 💵\n- Pesos Colombianos 🇨🇴');
 
-const flowPaisEnvio = addKeyword('10', 'strict') // Responde solo si el usuario envía exactamente "10"
+const flowPaisEnvio = addKeyword('10', 'strict')
     .addAnswer('¡Puedes enviar dinero desde cualquier país del mundo! 🌍💸 EnviaPago está disponible globalmente para facilitar tus transacciones.');
 
-const flowPrincipal = addKeyword(['hola', 'alo'], 'strict') // Responde si el usuario dice "hola" o "alo"
+const flowPrincipal = addKeyword(['hola', 'alo'], 'strict')
     .addAnswer(
         `Buenas, espero estés bien 🤩. Te comunicas con Raúl Briceño, agente de soporte técnico de EnviaPago. ¿Cómo puedo ayudarte?\n\nPor favor, elige una de las siguientes opciones respondiendo con el número correspondiente:
         1️⃣ ¿Cuál es el horario de trabajo? 🗓️
@@ -83,10 +102,10 @@ const main = async () => {
         provider: adapterProvider,
         database: adapterDB,
     });
-}
+};
 
 // Cambia esta parte para que escuche en el puerto de Railway
-const PORT = process.env.PORT || 3000; // Usa el puerto proporcionado por Railway
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
